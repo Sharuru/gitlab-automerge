@@ -11,7 +11,8 @@ public class AMConfig {
 
     private Gitlab gitlab;
 
-    private Key key;
+    private Mattermost mattermost;
+
 
     @Data
     public static class Gitlab {
@@ -23,12 +24,12 @@ public class AMConfig {
         private String targetBranch;
     }
 
-
     @Data
-    public static class Key {
-
-        private String gitlab;
-
-        private String mattermost;
+    public static class Mattermost {
+        private String url;
+        private String privateToken;
+        private String notifyChannel;
     }
+
+
 }

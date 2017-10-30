@@ -11,7 +11,6 @@ import self.srr.tools.am.common.AMConfig;
 @EnableScheduling
 public class AmApplication {
 
-
 	public static void main(String[] args) {
 		SpringApplication.run(AmApplication.class, args);
 	}

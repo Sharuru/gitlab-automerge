@@ -14,21 +14,21 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import self.srr.tools.am.common.AMConfig;
-import self.srr.tools.am.response.MergeRequestResponse;
+import self.srr.tools.am.response.GitlabAPIResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Component
-public class ApiComp {
+public class GitlabApiComp {
 
     @Autowired
     AMConfig amConfig;
 
-    public MergeRequestResponse createMR() {
+    public GitlabAPIResponse createMR() {
 
-        MergeRequestResponse mergeRequestResponse = new MergeRequestResponse();
+        GitlabAPIResponse mergeRequestResponse = new GitlabAPIResponse();
 
         HttpPost httpPost = new HttpPost(amConfig.getGitlab().getUrl() + "/api/v4/projects/" + amConfig.getGitlab().getProjectId() + "/merge_requests");
         httpPost.setHeader("PRIVATE-TOKEN", amConfig.getGitlab().getPrivateToken());
@@ -45,7 +45,7 @@ public class ApiComp {
             HttpResponse response = HttpClients.createDefault().execute(httpPost);
 
             String responseStr = EntityUtils.toString(response.getEntity());
-            mergeRequestResponse = new Gson().fromJson(responseStr, MergeRequestResponse.class);
+            mergeRequestResponse = new Gson().fromJson(responseStr, GitlabAPIResponse.class);
             mergeRequestResponse.setStatusCode(response.getStatusLine().getStatusCode());
 
             log.info("API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
@@ -63,9 +63,9 @@ public class ApiComp {
         return mergeRequestResponse;
     }
 
-    public MergeRequestResponse updateMR(String iid) {
+    public GitlabAPIResponse updateMR(String iid) {
 
-        MergeRequestResponse mergeRequestResponse = new MergeRequestResponse();
+        GitlabAPIResponse mergeRequestResponse = new GitlabAPIResponse();
 
         HttpGet httpGet = new HttpGet(amConfig.getGitlab().getUrl() + "/api/v4/projects/" + amConfig.getGitlab().getProjectId() + "/merge_requests/" + iid);
         httpGet.setHeader("PRIVATE-TOKEN", amConfig.getGitlab().getPrivateToken());
@@ -73,7 +73,7 @@ public class ApiComp {
         try {
             HttpResponse response = HttpClients.createDefault().execute(httpGet);
             String responseStr = EntityUtils.toString(response.getEntity());
-            mergeRequestResponse = new Gson().fromJson(responseStr, MergeRequestResponse.class);
+            mergeRequestResponse = new Gson().fromJson(responseStr, GitlabAPIResponse.class);
             mergeRequestResponse.setStatusCode(response.getStatusLine().getStatusCode());
 
             log.info("API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
@@ -85,16 +85,16 @@ public class ApiComp {
         return mergeRequestResponse;
     }
 
-    public MergeRequestResponse acceptMR(String iid) {
+    public GitlabAPIResponse acceptMR(String iid) {
 
-        MergeRequestResponse mergeRequestResponse = new MergeRequestResponse();
+        GitlabAPIResponse mergeRequestResponse = new GitlabAPIResponse();
 
         HttpPut httpPut = new HttpPut(amConfig.getGitlab().getUrl() + "/api/v4/projects/" + amConfig.getGitlab().getProjectId() + "/merge_requests/" + iid + "/merge");
         httpPut.setHeader("PRIVATE-TOKEN", amConfig.getGitlab().getPrivateToken());
         try {
             HttpResponse response = HttpClients.createDefault().execute(httpPut);
             String responseStr = EntityUtils.toString(response.getEntity());
-            mergeRequestResponse = new Gson().fromJson(responseStr, MergeRequestResponse.class);
+            mergeRequestResponse = new Gson().fromJson(responseStr, GitlabAPIResponse.class);
             mergeRequestResponse.setStatusCode(response.getStatusLine().getStatusCode());
 
             log.info("API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
@@ -103,7 +103,7 @@ public class ApiComp {
             e.printStackTrace();
             log.error("Error happened in 'acceptMR': " + e.getMessage());
         }
-        
+
         return mergeRequestResponse;
     }
 }

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 @Data
-public class MergeRequestResponse {
+public class GitlabAPIResponse {
 
     private int statusCode;
 
