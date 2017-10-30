@@ -9,6 +9,7 @@ public class GitlabAPIResponse {
     private int statusCode;
 
     private String id;
+
     private String iid;
 
     @SerializedName("merge_status")

@@ -24,29 +24,29 @@ public class MergeTask {
     @Autowired
     MattermostApiComp mattermostApiComp;
 
-    @Scheduled(fixedRate = 1000000000)
-    public void print() throws Exception {
+    // Every 15 minutes during workdays
+    @Scheduled(cron = "0 */15 9-19 * * MON-FRI")
+    public void task() throws Exception {
+
+        log.info("MergeTask started.");
 
         // create MR
         GitlabAPIResponse createMRResponse = gitlabApiComp.createMR();
-        mattermostApiComp.sendPost("开始干活了！");
 
         if (createMRResponse.getStatusCode() == 201) {
             TimeUnit.SECONDS.sleep(5L);
             // accept MR
             GitlabAPIResponse acceptMRResponse = gitlabApiComp.acceptMR(createMRResponse.getIid());
             if (acceptMRResponse.getStatusCode() == 200 && "can_be_merged".equalsIgnoreCase(acceptMRResponse.getMergeStatus())) {
-                log.info("MergeTask success!");
-                mattermostApiComp.sendPost("MergeSuccess");
+                log.info("MR: " + acceptMRResponse.getIid() + " is merged successfully.");
             } else {
-                log.error("Can not merge!");
-                mattermostApiComp.sendPost("合并失败！");
+                log.error("MR: " + acceptMRResponse.getIid() + " can not be merged automatically.");
+                mattermostApiComp.sendPost("MergeRequest: " + acceptMRResponse.getIid() + "自动合并失败了。");
             }
         } else {
-            log.error("Can not send MR!");
-            mattermostApiComp.sendPost("咋回事？");
+            log.error("Can not create new MR.");
+            mattermostApiComp.sendPost("无法创建新的 MR，前序 MR 未解决？");
         }
 
-        mattermostApiComp.sendPost("活干完了！");
     }
 }

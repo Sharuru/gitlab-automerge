@@ -26,6 +26,11 @@ public class GitlabApiComp {
     @Autowired
     AMConfig amConfig;
 
+    /**
+     * Create MR request
+     *
+     * @return response
+     */
     public GitlabAPIResponse createMR() {
 
         GitlabAPIResponse mergeRequestResponse = new GitlabAPIResponse();
@@ -38,7 +43,7 @@ public class GitlabApiComp {
         params.add(new BasicNameValuePair("id", amConfig.getGitlab().getProjectId()));
         params.add(new BasicNameValuePair("source_branch", amConfig.getGitlab().getSourceBranch()));
         params.add(new BasicNameValuePair("target_branch", amConfig.getGitlab().getTargetBranch()));
-        params.add(new BasicNameValuePair("title", "Auto merge test"));
+        params.add(new BasicNameValuePair("title", "Created by GAM scheduled merge task"));
 
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
@@ -63,28 +68,12 @@ public class GitlabApiComp {
         return mergeRequestResponse;
     }
 
-    public GitlabAPIResponse updateMR(String iid) {
-
-        GitlabAPIResponse mergeRequestResponse = new GitlabAPIResponse();
-
-        HttpGet httpGet = new HttpGet(amConfig.getGitlab().getUrl() + "/api/v4/projects/" + amConfig.getGitlab().getProjectId() + "/merge_requests/" + iid);
-        httpGet.setHeader("PRIVATE-TOKEN", amConfig.getGitlab().getPrivateToken());
-
-        try {
-            HttpResponse response = HttpClients.createDefault().execute(httpGet);
-            String responseStr = EntityUtils.toString(response.getEntity());
-            mergeRequestResponse = new Gson().fromJson(responseStr, GitlabAPIResponse.class);
-            mergeRequestResponse.setStatusCode(response.getStatusLine().getStatusCode());
-
-            log.info("API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("Error happened in 'updateMR': " + e.getMessage());
-        }
-
-        return mergeRequestResponse;
-    }
-
+    /**
+     * Accept matched MR
+     *
+     * @param iid MR id
+     * @return response
+     */
     public GitlabAPIResponse acceptMR(String iid) {
 
         GitlabAPIResponse mergeRequestResponse = new GitlabAPIResponse();

@@ -23,9 +23,11 @@ am:
     source-branch: develop
     target-branch: master
 
-  key:
-    gitlab: aaa
-    mattermost: bbb
+  mattermost:
+    url: http://127.0.0.1:11000
+    private-token: token
+    notify-channel: channelId
+
 
 
 # Configuration END

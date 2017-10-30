@@ -20,6 +20,12 @@ public class MattermostApiComp {
     @Autowired
     AMConfig amConfig;
 
+    /**
+     * Send message to Mattermost users
+     *
+     * @param message message
+     * @return response
+     */
     public MattermostAPIResponse sendPost(String message) {
 
         MattermostAPIResponse apiResponse = new MattermostAPIResponse();
