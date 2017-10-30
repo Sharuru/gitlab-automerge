@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>GAM - 维护面板</title>
+    <meta charset="UTF-8"/>
+    <script th:src="@{/webjars/jquery/3.2.0/jquery.min.js}"></script>
+</head>
+<body>
+
+<!-- content -->
+<div style="padding-top: 5rem;padding-left: 5rem;">
+    <h3>手动更新操作</h3>
+    <p>如果您需要立刻更新 ITA 分支，请按下“执行更新”按钮。</p>
+
+    <button id="update-btn" type="button">执行更新</button>
+</div>
+
+<div style="padding-top: 2rem;padding-left: 5rem;">
+    <h4>响应</h4>
+    <div id="update-response"></div>
+</div>
+
+<script>
+    $(function () {
+        $("#update-btn").click(function () {
+            $('#update-btn').attr('disabled', 'disabled');
+            $.ajax({
+                type: 'POST',
+                url: '/update'
+            })
+                .done(function (data) {
+                    if (data.status === true) {
+                        $('#update-response').append(data.message + "<br/>");
+                    } else {
+                        $('#update-response').append(data.message + "<br/>");
+                    }
+                    setTimeout(function () {
+                        $('#update-btn').removeAttr('disabled');
+                    }, 1500)
+                    ;
+                });
+        })
+    });
+</script>
+
+</body>
+</html>

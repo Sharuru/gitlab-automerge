@@ -31,7 +31,7 @@ public class GitlabApiComp {
      *
      * @return response
      */
-    public GitlabAPIResponse createMR() {
+    public GitlabAPIResponse createMR(String from) {
 
         GitlabAPIResponse mergeRequestResponse = new GitlabAPIResponse();
 
@@ -43,7 +43,7 @@ public class GitlabApiComp {
         params.add(new BasicNameValuePair("id", amConfig.getGitlab().getProjectId()));
         params.add(new BasicNameValuePair("source_branch", amConfig.getGitlab().getSourceBranch()));
         params.add(new BasicNameValuePair("target_branch", amConfig.getGitlab().getTargetBranch()));
-        params.add(new BasicNameValuePair("title", "Created by GAM scheduled merge task"));
+        params.add(new BasicNameValuePair("title", "Created by " + from));
 
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
