@@ -16,4 +16,7 @@ public class GitlabMRResponse {
 
     @SerializedName("merge_status")
     private String mergeStatus;
+
+    @SerializedName("merge_commit_sha")
+    private String mergeCommitSha;
 }
