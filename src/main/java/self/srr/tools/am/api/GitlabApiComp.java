@@ -14,9 +14,11 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import self.srr.tools.am.common.AMConfig;
-import self.srr.tools.am.response.GitlabAPIResponse;
+import self.srr.tools.am.response.GitlabMRListResponse;
+import self.srr.tools.am.response.GitlabMRResponse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -31,9 +33,9 @@ public class GitlabApiComp {
      *
      * @return response
      */
-    public GitlabAPIResponse createMR(String from) {
+    public GitlabMRResponse createMR(String from) {
 
-        GitlabAPIResponse mergeRequestResponse = new GitlabAPIResponse();
+        GitlabMRResponse mergeRequestResponse = new GitlabMRResponse();
 
         HttpPost httpPost = new HttpPost(amConfig.getGitlab().getUrl() + "/api/v4/projects/" + amConfig.getGitlab().getProjectId() + "/merge_requests");
         httpPost.setHeader("PRIVATE-TOKEN", amConfig.getGitlab().getPrivateToken());
@@ -50,17 +52,15 @@ public class GitlabApiComp {
             HttpResponse response = HttpClients.createDefault().execute(httpPost);
 
             String responseStr = EntityUtils.toString(response.getEntity());
-            mergeRequestResponse = new Gson().fromJson(responseStr, GitlabAPIResponse.class);
-            mergeRequestResponse.setStatusCode(response.getStatusLine().getStatusCode());
-
             log.info("createMR API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
+            mergeRequestResponse = new Gson().fromJson(responseStr, GitlabMRResponse.class);
+            mergeRequestResponse.setStatusCode(response.getStatusLine().getStatusCode());
 
             // FIXME: workaround cause Gitlab won't refresh the MR status #17287
             HttpGet httpGet = new HttpGet(amConfig.getGitlab().getProjectPage() + "/merge_requests/" + mergeRequestResponse.getIid());
             httpGet.setHeader("PRIVATE-TOKEN", amConfig.getGitlab().getPrivateToken());
             HttpResponse workaroundResponse = HttpClients.createDefault().execute(httpGet);
             log.info("createMR workaround engaged with return code: " + workaroundResponse.getStatusLine().getStatusCode());
-
         } catch (Exception e) {
             e.printStackTrace();
             log.error("Error happened in 'createMR': " + e.getMessage());
@@ -75,25 +75,45 @@ public class GitlabApiComp {
      * @param iid MR id
      * @return response
      */
-    public GitlabAPIResponse acceptMR(String iid) {
+    public GitlabMRResponse acceptMR(String iid) {
 
-        GitlabAPIResponse mergeRequestResponse = new GitlabAPIResponse();
+        GitlabMRResponse mergeRequestResponse = new GitlabMRResponse();
 
         HttpPut httpPut = new HttpPut(amConfig.getGitlab().getUrl() + "/api/v4/projects/" + amConfig.getGitlab().getProjectId() + "/merge_requests/" + iid + "/merge");
         httpPut.setHeader("PRIVATE-TOKEN", amConfig.getGitlab().getPrivateToken());
         try {
             HttpResponse response = HttpClients.createDefault().execute(httpPut);
             String responseStr = EntityUtils.toString(response.getEntity());
-            mergeRequestResponse = new Gson().fromJson(responseStr, GitlabAPIResponse.class);
+            log.info("acceptMR API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
+            mergeRequestResponse = new Gson().fromJson(responseStr, GitlabMRResponse.class);
             mergeRequestResponse.setStatusCode(response.getStatusLine().getStatusCode());
-
-            log.info("accept MR API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
-
         } catch (Exception e) {
             e.printStackTrace();
             log.error("Error happened in 'acceptMR': " + e.getMessage());
         }
 
         return mergeRequestResponse;
+    }
+
+    public GitlabMRListResponse listMR() {
+
+        GitlabMRListResponse listResponse = new GitlabMRListResponse();
+
+        HttpGet httpGet = new HttpGet(amConfig.getGitlab().getUrl() + "/api/v4/projects/" + amConfig.getGitlab().getProjectId() + "/merge_requests/");
+        httpGet.setHeader("PRIVATE-TOKEN", amConfig.getGitlab().getPrivateToken());
+
+        try {
+            HttpResponse response = HttpClients.createDefault().execute(httpGet);
+            String responseStr = EntityUtils.toString(response.getEntity());
+            log.info("listMR API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
+            GitlabMRResponse[] mrs = new Gson().fromJson(responseStr, GitlabMRResponse[].class);
+            listResponse.setStatusCode(response.getStatusLine().getStatusCode());
+            listResponse.setMrList(Arrays.asList(mrs));
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Error happened in 'listMR': " + e.getMessage());
+        }
+
+        return listResponse;
     }
 }
