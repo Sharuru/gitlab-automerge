@@ -46,7 +46,7 @@ public class MattermostApiComp {
             apiResponse = new Gson().fromJson(responseStr, MattermostAPIResponse.class);
             apiResponse.setStatusCode(response.getStatusLine().getStatusCode());
 
-            log.info("API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
+            log.info("sendPost API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
 
         } catch (Exception e) {
             e.printStackTrace();

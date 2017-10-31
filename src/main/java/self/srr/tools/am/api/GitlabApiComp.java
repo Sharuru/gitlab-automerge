@@ -53,12 +53,13 @@ public class GitlabApiComp {
             mergeRequestResponse = new Gson().fromJson(responseStr, GitlabAPIResponse.class);
             mergeRequestResponse.setStatusCode(response.getStatusLine().getStatusCode());
 
-            log.info("API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
+            log.info("createMR API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
 
             // FIXME: workaround cause Gitlab won't refresh the MR status #17287
             HttpGet httpGet = new HttpGet(amConfig.getGitlab().getProjectPage() + "/merge_requests/" + mergeRequestResponse.getIid());
             httpGet.setHeader("PRIVATE-TOKEN", amConfig.getGitlab().getPrivateToken());
-            HttpClients.createDefault().execute(httpGet);
+            HttpResponse workaroundResponse = HttpClients.createDefault().execute(httpGet);
+            log.info("createMR workaround engaged with return code: " + workaroundResponse.getStatusLine().getStatusCode());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,7 +87,7 @@ public class GitlabApiComp {
             mergeRequestResponse = new Gson().fromJson(responseStr, GitlabAPIResponse.class);
             mergeRequestResponse.setStatusCode(response.getStatusLine().getStatusCode());
 
-            log.info("API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
+            log.info("accept MR API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
 
         } catch (Exception e) {
             e.printStackTrace();

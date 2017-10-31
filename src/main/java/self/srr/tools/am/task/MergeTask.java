@@ -26,7 +26,7 @@ public class MergeTask {
     MattermostApiComp mattermostApiComp;
 
     // Every 15 minutes during workdays
-    @Scheduled(cron = "0 */15 9-19 * * MON-FRI")
+    @Scheduled(cron = "0 0/15 9-19 * * MON-FRI")
     public void MergeTaskScheduleCaller() throws Exception {
         task("GAM Schedule Back-front");
     }
@@ -45,7 +45,7 @@ public class MergeTask {
             // accept MR
             GitlabAPIResponse acceptMRResponse = gitlabApiComp.acceptMR(createMRResponse.getIid());
             if (acceptMRResponse.getStatusCode() == 200 && "can_be_merged".equalsIgnoreCase(acceptMRResponse.getMergeStatus())) {
-                log.info("MR: " + acceptMRResponse.getIid() + " is merged successfully.");
+                log.info("MR: " + createMRResponse.getIid() + " is merged successfully.");
                 response.setStatus(true);
                 response.setMessage("更新完成，请前往 pipeline 页面查看编译状态。");
             } else {
