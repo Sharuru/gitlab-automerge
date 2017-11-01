@@ -68,15 +68,17 @@ public class MergeTask {
             log.info("MR: " + mrId + " is merged successfully.");
             response.setStatus(true);
             response.setMessage("更新完成，请前往 pipeline 页面查看编译状态。");
-        } else if("null".equalsIgnoreCase(acceptMRResponse.getMergeCommitSha()) || acceptMRResponse.getMergeCommitSha() == null){
-            log.error("MR: " + mrId + " no further update.");
-            response.setStatus(false);
-            response.setMessage("ITA 分支已是最新状态。");
-        }else{
+        }
+//        else if("null".equalsIgnoreCase(acceptMRResponse.getMergeCommitSha()) || acceptMRResponse.getMergeCommitSha() == null){
+//            log.error("MR: " + mrId + " no further update.");
+//            response.setStatus(false);
+//            response.setMessage("ITA 分支已是最新状态。");
+//        }
+        else{
             log.error("MR: " + mrId + " can not be merged automatically.");
             mattermostApiComp.sendPost("MergeRequest: " + mrId + " 自动合并失败了。");
             response.setStatus(false);
-            response.setMessage("更新失败，无法自动合并，请联系管理员。");
+            response.setMessage("更新失败，分支已是最新状态 / 代码无法自动合并，请联系管理员。");
         }
 
         return response;
