@@ -41,17 +41,21 @@ public class MergeTask {
 
         String mrId = null;
 
+        boolean oldMR = false;
+
         // check MR
         GitlabMRListResponse listMRResponse = gitlabApiComp.listMR();
         if ((listMRResponse.getMrList().size() > 0) && (!"merged".equalsIgnoreCase(listMRResponse.getMrList().get(0).getState()) &&
                 !"closed".equalsIgnoreCase(listMRResponse.getMrList().get(0).getState()))) {
             // Have unclosed or unmerged MR, fetch and try close it
             mrId = listMRResponse.getMrList().get(0).getIid();
+            oldMR = true;
         } else {
             // create MR
             GitlabMRResponse createMRResponse = gitlabApiComp.createMR(from);
             if (createMRResponse.getStatusCode() == 201) {
                 mrId = createMRResponse.getIid();
+                oldMR = false;
             } else {
                 log.error("Can not create new MR.");
                 mattermostApiComp.sendPost("无法创建新的 MR，前序 MR 未解决？");
@@ -68,15 +72,18 @@ public class MergeTask {
             log.info("MR: " + mrId + " is merged successfully.");
             response.setStatus(true);
             response.setMessage("更新完成，请前往 pipeline 页面查看编译状态。");
+            if (oldMR) {
+                mattermostApiComp.sendPost("MergeRequest: [!" + mrId + "](" + AMConfig.getGitlab().getPublicProjectPage() + "/merge_requests/" + mrId + ") 自动重试成功。");
+            }
         }
 //        else if("null".equalsIgnoreCase(acceptMRResponse.getMergeCommitSha()) || acceptMRResponse.getMergeCommitSha() == null){
 //            log.error("MR: " + mrId + " no further update.");
 //            response.setStatus(false);
 //            response.setMessage("ITA 分支已是最新状态。");
 //        }
-        else{
+        else {
             log.error("MR: " + mrId + " can not be merged automatically.");
-            mattermostApiComp.sendPost("MergeRequest: " + mrId + " 自动合并失败了。");
+            mattermostApiComp.sendPost("MergeRequest: [!" + mrId + "](" + AMConfig.getGitlab().getPublicProjectPage() + "/merge_requests/" + mrId + ") 自动合并失败了。");
             response.setStatus(false);
             response.setMessage("更新失败，分支已是最新状态 / 代码无法自动合并，请联系管理员。");
         }

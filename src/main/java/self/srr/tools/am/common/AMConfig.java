@@ -19,6 +19,7 @@ public class AMConfig {
         private String url;
         private String privateToken;
         private String projectPage;
+        private String publicProjectPage;
         private String projectId;
         private String sourceBranch;
         private String targetBranch;
