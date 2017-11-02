@@ -27,7 +27,7 @@ public class MergeTask {
     MattermostApiComp mattermostApiComp;
 
     // Every 15 minutes during workdays
-    @Scheduled(cron = "0 0/15 9-19 * * MON-FRI")
+    @Scheduled(cron = "0 0/15 9-20 * * MON-FRI")
     //@Scheduled(fixedRate = 100000000L)
     public void MergeTaskScheduleCaller() throws Exception {
         task("GAM Schedule Back-front");
