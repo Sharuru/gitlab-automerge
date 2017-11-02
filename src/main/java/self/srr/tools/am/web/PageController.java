@@ -27,7 +27,7 @@ public class PageController {
 
         MergeTaskResponse response = new MergeTaskResponse();
         try {
-            response = mergeTask.task("GAM Maintenance Panel");
+            response = mergeTask.task(true);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("Error happened in `update`： " + e.getMessage());

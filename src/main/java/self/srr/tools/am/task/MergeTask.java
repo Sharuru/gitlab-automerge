@@ -30,10 +30,14 @@ public class MergeTask {
     @Scheduled(cron = "0 0/15 9-20 * * MON-FRI")
     //@Scheduled(fixedRate = 100000000L)
     public void MergeTaskScheduleCaller() throws Exception {
-        task("GAM Schedule Back-front");
+        task(false);
     }
 
-    public MergeTaskResponse task(String from) throws Exception {
+    public MergeTaskResponse task(boolean isWebCall) throws Exception {
+
+        String fromTxt = isWebCall ? "GAM Maintenance Panel" : "GAM Schedule Back-front";
+        String shortFromTxt = isWebCall ? "网页请求的任务：" : "后台自动任务：";
+
 
         MergeTaskResponse response = new MergeTaskResponse();
 
@@ -52,15 +56,15 @@ public class MergeTask {
             oldMR = true;
         } else {
             // create MR
-            GitlabMRResponse createMRResponse = gitlabApiComp.createMR(from);
+            GitlabMRResponse createMRResponse = gitlabApiComp.createMR(fromTxt);
             if (createMRResponse.getStatusCode() == 201) {
                 mrId = createMRResponse.getIid();
                 oldMR = false;
             } else {
                 log.error("Can not create new MR.");
-                mattermostApiComp.sendPost("无法创建新的 MR，前序 MR 未解决？");
+                mattermostApiComp.sendPost(shortFromTxt + "无法创建新的 MR，前序 MR 未解决？");
                 response.setStatus(false);
-                response.setMessage("更新失败，有前序任务阻碍，请联系管理员。");
+                response.setMessage("更新失败，前序任务合并中，请稍做等待。");
             }
         }
 
@@ -73,7 +77,7 @@ public class MergeTask {
             response.setStatus(true);
             response.setMessage("更新完成，请前往 pipeline 页面查看编译状态。");
             if (oldMR) {
-                mattermostApiComp.sendPost("MergeRequest: [!" + mrId + "](" + AMConfig.getGitlab().getPublicProjectPage() + "/merge_requests/" + mrId + ") 自动重试成功。");
+                mattermostApiComp.sendPost(shortFromTxt + "MergeRequest: [!" + mrId + "](" + AMConfig.getGitlab().getPublicProjectPage() + "/merge_requests/" + mrId + ") 自动重试成功。");
             }
         }
 //        else if("null".equalsIgnoreCase(acceptMRResponse.getMergeCommitSha()) || acceptMRResponse.getMergeCommitSha() == null){
@@ -83,9 +87,11 @@ public class MergeTask {
 //        }
         else {
             log.error("MR: " + mrId + " can not be merged automatically.");
-            mattermostApiComp.sendPost("MergeRequest: [!" + mrId + "](" + AMConfig.getGitlab().getPublicProjectPage() + "/merge_requests/" + mrId + ") 自动合并失败了。");
             response.setStatus(false);
             response.setMessage("更新失败，分支已是最新状态 / 代码无法自动合并，请联系管理员。");
+            if(!isWebCall){
+                mattermostApiComp.sendPost(shortFromTxt + "MergeRequest: [!" + mrId + "](" + AMConfig.getGitlab().getPublicProjectPage() + "/merge_requests/" + mrId + ") 自动合并失败了。");
+            }
         }
 
         return response;
