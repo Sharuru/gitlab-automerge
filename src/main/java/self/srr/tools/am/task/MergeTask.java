@@ -53,6 +53,9 @@ public class MergeTask {
                 !"closed".equalsIgnoreCase(listMRResponse.getMrList().get(0).getState()))) {
             // Have unclosed or unmerged MR, fetch and try close it
             mrId = listMRResponse.getMrList().get(0).getIid();
+            if("GAM Maintenance Panel".equalsIgnoreCase(listMRResponse.getMrList().get(0).getTitle())){
+                shortFromTxt = "网页请求的任务：";
+            }
             oldMR = true;
         } else {
             // create MR

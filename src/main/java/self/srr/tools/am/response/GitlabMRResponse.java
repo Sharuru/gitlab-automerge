@@ -14,6 +14,8 @@ public class GitlabMRResponse {
 
     private String state;
 
+    private String title;
+
     @SerializedName("merge_status")
     private String mergeStatus;
 
