@@ -26,8 +26,8 @@ public class MergeTask {
     @Autowired
     MattermostApiComp mattermostApiComp;
 
-    // Every 15 minutes during workdays
-    @Scheduled(cron = "0 0/15 9-20 * * MON-FRI")
+    // Everyday at 0920 GMT+8 during weekdays
+    @Scheduled(cron = "0 20 9 * * MON-FRI")
     //@Scheduled(fixedRate = 100000000L)
     public void MergeTaskScheduleCaller() throws Exception {
         task(false);
@@ -37,7 +37,6 @@ public class MergeTask {
 
         String fromTxt = isWebCall ? "GAM Maintenance Panel" : "GAM Schedule Back-front";
         String shortFromTxt = isWebCall ? "网页请求的任务：" : "后台自动任务：";
-
 
         MergeTaskResponse response = new MergeTaskResponse();
 
@@ -53,7 +52,7 @@ public class MergeTask {
                 !"closed".equalsIgnoreCase(listMRResponse.getMrList().get(0).getState()))) {
             // Have unclosed or unmerged MR, fetch and try close it
             mrId = listMRResponse.getMrList().get(0).getIid();
-            if("GAM Maintenance Panel".equalsIgnoreCase(listMRResponse.getMrList().get(0).getTitle())){
+            if("Created by GAM Maintenance Panel".equalsIgnoreCase(listMRResponse.getMrList().get(0).getTitle())){
                 shortFromTxt = "网页请求的任务：";
             }
             oldMR = true;

@@ -27,7 +27,9 @@ public class PageController {
 
         MergeTaskResponse response = new MergeTaskResponse();
         try {
-            response = mergeTask.task(true);
+            //response = mergeTask.task(true);
+            response.setStatus(false);
+            response.setMessage("当前系统设置不允许来自网页端的操作。");
         } catch (Exception e) {
             e.printStackTrace();
             log.error("Error happened in `update`： " + e.getMessage());
