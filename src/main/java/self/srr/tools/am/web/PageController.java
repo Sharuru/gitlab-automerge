@@ -5,8 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import self.srr.tools.am.response.DeployTaskResponse;
 import self.srr.tools.am.response.MergeTaskResponse;
-import self.srr.tools.am.task.MergeTask;
+import self.srr.tools.am.service.DeployService;
 
 @Slf4j
 @Controller
@@ -14,7 +15,7 @@ import self.srr.tools.am.task.MergeTask;
 public class PageController {
 
     @Autowired
-    MergeTask mergeTask;
+    DeployService mergeTask;
 
     @RequestMapping("/")
     public String page() {
@@ -27,7 +28,7 @@ public class PageController {
 
         MergeTaskResponse response = new MergeTaskResponse();
         try {
-            //response = mergeTask.task(true);
+            //response = mergeTask.service(true);
             response.setStatus(false);
             response.setMessage("当前系统设置不允许来自网页端的操作。");
         } catch (Exception e) {
@@ -37,4 +38,14 @@ public class PageController {
 
         return response;
     }
+
+    @RequestMapping("/deployStep1")
+    @ResponseBody
+    public DeployTaskResponse deployStep1() {
+
+        DeployTaskResponse response = new DeployTaskResponse();
+
+        return response;
+    }
+
 }

@@ -1,4 +1,4 @@
-package self.srr.tools.am.api;
+package self.srr.tools.am.service;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
@@ -9,13 +9,14 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import self.srr.tools.am.common.AMConfig;
 import self.srr.tools.am.request.MattermostPostAPIRequest;
 import self.srr.tools.am.response.MattermostAPIResponse;
 
 @Slf4j
-@Component
-public class MattermostApiComp {
+@Service
+public class MattermostApiService {
 
     @Autowired
     AMConfig amConfig;

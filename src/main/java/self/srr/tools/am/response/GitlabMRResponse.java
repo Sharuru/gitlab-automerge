@@ -21,4 +21,10 @@ public class GitlabMRResponse {
 
     @SerializedName("merge_commit_sha")
     private String mergeCommitSha;
+
+    @SerializedName("target_branch")
+    private String targetBranch;
+
+    @SerializedName("source_branch")
+    private String sourceBranch;
 }

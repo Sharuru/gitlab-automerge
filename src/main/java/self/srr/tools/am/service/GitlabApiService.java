@@ -1,4 +1,4 @@
-package self.srr.tools.am.api;
+package self.srr.tools.am.service;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import self.srr.tools.am.common.AMConfig;
 import self.srr.tools.am.response.GitlabMRListResponse;
 import self.srr.tools.am.response.GitlabMRResponse;
@@ -22,8 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
-@Component
-public class GitlabApiComp {
+@Service
+public class GitlabApiService {
 
     @Autowired
     AMConfig amConfig;
@@ -33,7 +34,7 @@ public class GitlabApiComp {
      *
      * @return response
      */
-    public GitlabMRResponse createMR(String from) {
+    public GitlabMRResponse createMR(String refSource, String refTarget) {
 
         GitlabMRResponse mergeRequestResponse = new GitlabMRResponse();
 
@@ -43,9 +44,9 @@ public class GitlabApiComp {
         List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("id", amConfig.getGitlab().getProjectId()));
-        params.add(new BasicNameValuePair("source_branch", amConfig.getGitlab().getSourceBranch()));
-        params.add(new BasicNameValuePair("target_branch", amConfig.getGitlab().getTargetBranch()));
-        params.add(new BasicNameValuePair("title", "Created by " + from));
+        params.add(new BasicNameValuePair("source_branch", refSource));
+        params.add(new BasicNameValuePair("target_branch", refTarget));
+        params.add(new BasicNameValuePair("title", "Pre-deploy MR for branch: " + refTarget));
 
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
@@ -95,11 +96,11 @@ public class GitlabApiComp {
         return mergeRequestResponse;
     }
 
-    public GitlabMRListResponse listMR() {
+    public GitlabMRListResponse listMR(String reqState) {
 
         GitlabMRListResponse listResponse = new GitlabMRListResponse();
 
-        HttpGet httpGet = new HttpGet(amConfig.getGitlab().getUrl() + "/api/v4/projects/" + amConfig.getGitlab().getProjectId() + "/merge_requests/");
+        HttpGet httpGet = new HttpGet(amConfig.getGitlab().getUrl() + "/api/v4/projects/" + amConfig.getGitlab().getProjectId() + "/merge_requests?state=" + reqState);
         httpGet.setHeader("PRIVATE-TOKEN", amConfig.getGitlab().getPrivateToken());
 
         try {
