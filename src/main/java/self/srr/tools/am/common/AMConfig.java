@@ -23,6 +23,7 @@ public class AMConfig {
         private String projectId;
         private String sourceBranch;
         private String targetBranch;
+        private String pipelineToken;
     }
 
     @Data

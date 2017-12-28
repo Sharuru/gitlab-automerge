@@ -20,7 +20,7 @@ apply plugin: 'propdeps-idea'
 
 
 group = 'self.srr.tools'
-version = '0.2.5-SNAPSHOT'
+version = '0.3.3-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {

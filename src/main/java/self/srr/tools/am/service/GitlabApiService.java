@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import self.srr.tools.am.common.AMConfig;
 import self.srr.tools.am.response.GitlabMRListResponse;
 import self.srr.tools.am.response.GitlabMRResponse;
+import self.srr.tools.am.response.GitlabPipelineResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,6 +71,36 @@ public class GitlabApiService {
         return mergeRequestResponse;
     }
 
+    public GitlabPipelineResponse triggerPipe(String ref) {
+
+        GitlabPipelineResponse gitlabPipelineResponse = new GitlabPipelineResponse();
+
+        HttpPost httpPost = new HttpPost(amConfig.getGitlab().getUrl() + "/api/v4/projects/" + amConfig.getGitlab().getProjectId() + "/trigger/pipeline");
+        httpPost.setHeader("PRIVATE-TOKEN", amConfig.getGitlab().getPrivateToken());
+
+        List<NameValuePair> params = new ArrayList<>();
+
+        params.add(new BasicNameValuePair("token", amConfig.getGitlab().getPipelineToken()));
+        params.add(new BasicNameValuePair("ref", ref));
+
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            HttpResponse response = HttpClients.createDefault().execute(httpPost);
+
+            String responseStr = EntityUtils.toString(response.getEntity());
+            log.info("Pipeline triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
+            gitlabPipelineResponse = new Gson().fromJson(responseStr, GitlabPipelineResponse.class);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Error happened in 'triggerPipe': " + e.getMessage());
+        }
+
+        return gitlabPipelineResponse;
+
+    }
+
+
     /**
      * Accept matched MR
      *
@@ -96,6 +127,12 @@ public class GitlabApiService {
         return mergeRequestResponse;
     }
 
+    /**
+     * List all merge requests
+     *
+     * @param reqState request status
+     * @return response
+     */
     public GitlabMRListResponse listMR(String reqState) {
 
         GitlabMRListResponse listResponse = new GitlabMRListResponse();

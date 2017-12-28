@@ -2,15 +2,11 @@ package self.srr.tools.am.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import self.srr.tools.am.common.AMConfig;
 import self.srr.tools.am.response.DeployTaskResponse;
-import self.srr.tools.am.response.GitlabMRListResponse;
-import self.srr.tools.am.response.GitlabMRResponse;
+import self.srr.tools.am.response.GitlabPipelineResponse;
 import self.srr.tools.am.response.MergeTaskResponse;
-
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -40,23 +36,38 @@ public class DeployService {
 
         // phase1. merge
         try {
-            MergeTaskResponse mergeTaskResponse = mergeService.mergeTwoBranchs(AMConfig.getGitlab().getSourceBranch(), refTarget);
+            MergeTaskResponse mergeTaskResponse = mergeService.mergeTwoBranches(AMConfig.getGitlab().getSourceBranch(), refTarget);
             if (!mergeTaskResponse.isStatus()) {
-                response.setMsg("通知发布失败，请联系管理员。参考信息：" + mergeTaskResponse.getMessage());
+                response.setMsg(mergeTaskResponse.getMessage());
                 return response;
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-            response.setMsg("通知发布失败，请联系管理员。参考信息：ERR_MERGE_EXCEPTION");
+            response.setMsg("ERR_MERGE_EXCEPTION");
             return response;
         }
         // phase2. trigger
-
+        try {
+            GitlabPipelineResponse gitlabPipelineResponse = gitlabApiService.triggerPipe(refTarget);
+            if (refTarget.equalsIgnoreCase(gitlabPipelineResponse.getRef())) {
+                response.setBizStatus(true);
+                response.setReturnCode(0);
+                response.setPipelineId(String.valueOf(gitlabPipelineResponse.getId()));
+                String pipeLink = "<a href=\"" + AMConfig.getGitlab().getPublicProjectPage() + "/pipelines/" + gitlabPipelineResponse.getId() + "\">前往 PIPELINE 页面</a>";
+                response.setMsg(pipeLink);
+            } else {
+                response.setMsg("ERR_PIPE_BROKE");
+                return response;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            response.setMsg("ERR_PIPE_EXCEPTION");
+            return response;
+        }
 
         return response;
 
     }
 
 
-}
 }

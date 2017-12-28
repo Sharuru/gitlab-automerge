@@ -11,4 +11,6 @@ public class DeployTaskResponse {
 
     private String msg = "ERR_UNKNOWN_INITIALIZE";
 
+    private String pipelineId = "";
+
 }

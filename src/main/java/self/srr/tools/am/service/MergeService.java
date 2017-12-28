@@ -23,7 +23,15 @@ public class MergeService {
     @Autowired
     AMConfig AMConfig;
 
-    public MergeTaskResponse mergeTwoBranchs(String refSource, String refTarget) throws Exception {
+    /**
+     * Merge two giving branches
+     *
+     * @param refSource source branch
+     * @param refTarget target branch
+     * @return merge result
+     * @throws Exception exception
+     */
+    public MergeTaskResponse mergeTwoBranches(String refSource, String refTarget) throws Exception {
 
         MergeTaskResponse response = new MergeTaskResponse();
 
@@ -69,7 +77,7 @@ public class MergeService {
             log.error("MR: " + mrId + " can not be merged automatically.");
             response.setStatus(false);
             response.setMessage("WARN_ALREADY_NEW_OR_CONFLICT");
-            mattermostApiService.sendPost("MergeRequest: [!" + mrId + "](" + AMConfig.getGitlab().getPublicProjectPage() + "/merge_requests/" + mrId + ") 自动合并失败了（分支已是最新状态 / 代码无法自动合并）。");
+            mattermostApiService.sendPost("MergeRequest of " + refTarget + ": [!" + mrId + "](" + AMConfig.getGitlab().getPublicProjectPage() + "/merge_requests/" + mrId + ") 自动合并失败了（分支已是最新状态 / 代码无法自动合并）。");
         }
 
         return response;
