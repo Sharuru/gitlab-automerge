@@ -15,7 +15,7 @@
 <!-- content -->
 <div class="container" style="margin-left: 10rem; margin-top: 2rem;">
     <div class="page-header">
-        <h1>GAM - 维护面板 </h1>
+        <h1>GAM - 维护面板&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge">V0.3.5</span></h1>
         <p>在这里，你可以针对 STEP 1 以及 STEP 2 的机能进行手动发布管理。</p>
     </div>
 
@@ -23,9 +23,9 @@
         <div>
             <b>2012-12-28：关于发布周期与其他事宜</b>
             <p>
-                STEP 1 范围内的程序会在中国时间每天下午四点进行一次全量发布。<br/>
+                STEP 1 范围内的程序<b>通常</b>会在中国时间每天下午四点进行一次全量发布。<br/>
                 STEP 1 使用的数据库为前方提供的 LJD，SCHEMA 为：jastdb_v0-9-0-sh1。<br/>
-                STEP 2 范围内的程序请测试人员根据 Redmine Wiki 中的 ITA 发布流程进行操作，发布的程序版本默认每 15 分钟从开发分支合并一次。<br/>
+                STEP 2 范围内的程序请测试人员根据 Redmine Wiki 中的 ITA 发布流程进行操作。<br/>
                 STEP 2 使用的数据库为前方提供的 LJD，SCHEMA 为：jastdb_v0-9-0-sh2。<br/>
             </p>
         </div>
@@ -44,11 +44,11 @@
 
     <div class="page-header">
         <h3>STEP 2 操作区</h3>
-        <p>你可以在这里通知系统立即合并开发分支中的代码进入 ITA 分支中。</p>
+        <p>你可以在这里通知系统立即合并开发分支中的代码进入 ITA 分支中，并准备进行发布。</p>
     </div>
 
     <div>
-        <p>单击“STEP 2 通知发布”按钮后，触发计划外发布流程，随后操作类似 ITA 阶段。</p>
+        <p>单击“STEP 2 通知发布”按钮后，触发自主发布流程，随后操作类似 ITA 阶段。</p>
         <p>按下按钮后，请根据系统返回的 PIPELINE ID 前往对应页面等待基础部件编译完毕后，按下“播放键”进行单独程序的发布。</p>
         <button type="button" id="d2-btn" class="btn btn-primary">STEP 2 通知发布 ｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡</button>
     </div>
@@ -81,7 +81,7 @@
                                 if (data.bizStatus === true) {
                                     swal({
                                         title: "成功",
-                                        text: "STEP 1 通知发布成功 <br/>" + data.msg,
+                                        text: "STEP 1 通知发布成功 <br/>" + "下一步：" + data.msg,
                                         type: "success",
                                         html: true
                                     });
@@ -123,7 +123,7 @@
                                 if (data.bizStatus === true) {
                                     swal({
                                         title: "成功",
-                                        text: "STEP 2 通知发布成功 <br/>" + data.msg,
+                                        text: "STEP 2 通知发布成功 <br/>" + "下一步：" + data.msg,
                                         type: "success",
                                         html: true
                                     });
@@ -144,9 +144,5 @@
     });
 </script>
 
-
-<!--<div class="container" style="position: absolute; bottom: 0;">
-    JAT v0.0.1-SNAPSHOT
-</div>-->
 </body>
 </html>
