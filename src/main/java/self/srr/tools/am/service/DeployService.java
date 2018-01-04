@@ -25,7 +25,7 @@ public class DeployService {
     MergeService mergeService;
 
 
-    public DeployTaskResponse deploy(boolean isStep1) {
+    public DeployTaskResponse deploy(boolean isStep1, boolean needMerge) {
 
         DeployTaskResponse response = new DeployTaskResponse();
 
@@ -34,18 +34,21 @@ public class DeployService {
 
         String refTarget = isStep1 ? "feature/enhancement" : "feature/ita";
 
-        // phase1. merge
-        try {
-            MergeTaskResponse mergeTaskResponse = mergeService.mergeTwoBranches(AMConfig.getGitlab().getSourceBranch(), refTarget);
-            if (!mergeTaskResponse.isStatus()) {
-                response.setMsg(mergeTaskResponse.getMessage());
+        if (needMerge) {
+            // phase1. merge
+            try {
+                MergeTaskResponse mergeTaskResponse = mergeService.mergeTwoBranches(AMConfig.getGitlab().getSourceBranch(), refTarget);
+                if (!mergeTaskResponse.isStatus()) {
+                    response.setMsg(mergeTaskResponse.getMessage());
+                    return response;
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                response.setMsg("ERR_MERGE_EXCEPTION");
                 return response;
             }
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            response.setMsg("ERR_MERGE_EXCEPTION");
-            return response;
         }
+
         // phase2. trigger
         try {
             GitlabPipelineResponse gitlabPipelineResponse = gitlabApiService.triggerPipe(refTarget);

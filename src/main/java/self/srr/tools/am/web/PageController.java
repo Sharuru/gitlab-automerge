@@ -31,7 +31,15 @@ public class PageController {
     @ResponseBody
     public DeployTaskResponse deployStep1() {
 
-        return deployService.deploy(true);
+        return deployService.deploy(true, true);
+
+    }
+
+    @RequestMapping("/deployStep1s")
+    @ResponseBody
+    public DeployTaskResponse deployStep1s() {
+
+        return deployService.deploy(true, false);
 
     }
 
@@ -39,7 +47,15 @@ public class PageController {
     @ResponseBody
     public DeployTaskResponse deployStep2() {
 
-        return deployService.deploy(false);
+        return deployService.deploy(false, true);
+
+    }
+
+    @RequestMapping("/deployStep2s")
+    @ResponseBody
+    public DeployTaskResponse deployStep2s() {
+
+        return deployService.deploy(false, false);
 
     }
 
