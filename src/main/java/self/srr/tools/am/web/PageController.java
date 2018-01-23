@@ -32,24 +32,24 @@ public class PageController {
     @RequestMapping("/deployStep1")
     @ResponseBody
     public DeployTaskResponse deployStep1(HttpServletRequest request) {
-        DeployTaskResponse response = deployService.deploy(true, true, request.getRemoteAddr());
-        log.info("IP: " + request.getRemoteAddr() + " triggered deployStep1");
+        DeployTaskResponse response = deployService.deploy(true, true, request.getHeader("X-Real-IP"));
+        log.info("IP: " + request.getHeader("X-Real-IP") + " triggered deployStep1");
         return response;
     }
 
     @RequestMapping("/deployStep1s")
     @ResponseBody
     public DeployTaskResponse deployStep1s(HttpServletRequest request) {
-        DeployTaskResponse response = deployService.deploy(true, false, request.getRemoteAddr());
-        log.info("IP: " + request.getRemoteAddr() + " triggered deployStep1s");
+        DeployTaskResponse response = deployService.deploy(true, false, request.getHeader("X-Real-IP"));
+        log.info("IP: " + request.getHeader("X-Real-IP") + " triggered deployStep1s");
         return response;
     }
 
     @RequestMapping("/deployStep2")
     @ResponseBody
     public DeployTaskResponse deployStep2(HttpServletRequest request) {
-        DeployTaskResponse response = deployService.deploy(false, true, request.getRemoteAddr());
-        log.info("IP: " + request.getRemoteAddr() + " triggered deployStep2");
+        DeployTaskResponse response = deployService.deploy(false, true, request.getHeader("X-Real-IP"));
+        log.info("IP: " + request.getHeader("X-Real-IP") + " triggered deployStep2");
         return response;
 
     }
@@ -57,8 +57,8 @@ public class PageController {
     @RequestMapping("/deployStep2s")
     @ResponseBody
     public DeployTaskResponse deployStep2s(HttpServletRequest request) {
-        DeployTaskResponse response = deployService.deploy(false, false, request.getRemoteAddr());
-        log.info("IP: " + request.getRemoteAddr() + " triggered deployStep2s");
+        DeployTaskResponse response = deployService.deploy(false, false, request.getHeader("X-Real-IP"));
+        log.info("IP: " + request.getHeader("X-Real-IP") + " triggered deployStep2s");
         return response;
     }
 
