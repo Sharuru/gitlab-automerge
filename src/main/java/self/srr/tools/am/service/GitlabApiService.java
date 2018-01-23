@@ -14,6 +14,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import self.srr.tools.am.common.AMConfig;
 import self.srr.tools.am.response.GitlabMRListResponse;
 import self.srr.tools.am.response.GitlabMRResponse;
@@ -35,7 +36,7 @@ public class GitlabApiService {
      *
      * @return response
      */
-    public GitlabMRResponse createMR(String refSource, String refTarget) {
+    public GitlabMRResponse createMR(String refSource, String refTarget, String callerIp) {
 
         GitlabMRResponse mergeRequestResponse = new GitlabMRResponse();
 
@@ -48,6 +49,9 @@ public class GitlabApiService {
         params.add(new BasicNameValuePair("source_branch", refSource));
         params.add(new BasicNameValuePair("target_branch", refTarget));
         params.add(new BasicNameValuePair("title", "Pre-deploy MR for branch: " + refTarget));
+        if (!StringUtils.isEmpty(callerIp)) {
+            params.add(new BasicNameValuePair("description", "Requested by: " + callerIp));
+        }
 
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));

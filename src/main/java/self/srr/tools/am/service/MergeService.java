@@ -31,7 +31,7 @@ public class MergeService {
      * @return merge result
      * @throws Exception exception
      */
-    public MergeTaskResponse mergeTwoBranches(String refSource, String refTarget) throws Exception {
+    public MergeTaskResponse mergeTwoBranches(String refSource, String refTarget, String callerIp) throws Exception {
 
         MergeTaskResponse response = new MergeTaskResponse();
 
@@ -55,7 +55,7 @@ public class MergeService {
 
         if (!haveUnClosedMR) {
             // create MR
-            GitlabMRResponse gitlabMRResponse = gitlabApiService.createMR(refSource, refTarget);
+            GitlabMRResponse gitlabMRResponse = gitlabApiService.createMR(refSource, refTarget, callerIp);
             if (gitlabMRResponse.getStatusCode() == 201) {
                 mrId = gitlabMRResponse.getIid();
             } else {

@@ -10,6 +10,8 @@ import self.srr.tools.am.response.DeployTaskResponse;
 import self.srr.tools.am.response.MergeTaskResponse;
 import self.srr.tools.am.service.DeployService;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Slf4j
 @Controller
 @RequestMapping("/")
@@ -29,34 +31,35 @@ public class PageController {
 
     @RequestMapping("/deployStep1")
     @ResponseBody
-    public DeployTaskResponse deployStep1() {
-
-        return deployService.deploy(true, true);
-
+    public DeployTaskResponse deployStep1(HttpServletRequest request) {
+        DeployTaskResponse response = deployService.deploy(true, true, request.getRemoteAddr());
+        log.info("IP: " + request.getRemoteAddr() + " triggered deployStep1");
+        return response;
     }
 
     @RequestMapping("/deployStep1s")
     @ResponseBody
-    public DeployTaskResponse deployStep1s() {
-
-        return deployService.deploy(true, false);
-
+    public DeployTaskResponse deployStep1s(HttpServletRequest request) {
+        DeployTaskResponse response = deployService.deploy(true, false, request.getRemoteAddr());
+        log.info("IP: " + request.getRemoteAddr() + " triggered deployStep1s");
+        return response;
     }
 
     @RequestMapping("/deployStep2")
     @ResponseBody
-    public DeployTaskResponse deployStep2() {
-
-        return deployService.deploy(false, true);
+    public DeployTaskResponse deployStep2(HttpServletRequest request) {
+        DeployTaskResponse response = deployService.deploy(false, true, request.getRemoteAddr());
+        log.info("IP: " + request.getRemoteAddr() + " triggered deployStep2");
+        return response;
 
     }
 
     @RequestMapping("/deployStep2s")
     @ResponseBody
-    public DeployTaskResponse deployStep2s() {
-
-        return deployService.deploy(false, false);
-
+    public DeployTaskResponse deployStep2s(HttpServletRequest request) {
+        DeployTaskResponse response = deployService.deploy(false, false, request.getRemoteAddr());
+        log.info("IP: " + request.getRemoteAddr() + " triggered deployStep2s");
+        return response;
     }
 
 }

@@ -25,7 +25,7 @@ public class DeployService {
     MergeService mergeService;
 
 
-    public DeployTaskResponse deploy(boolean isStep1, boolean needMerge) {
+    public DeployTaskResponse deploy(boolean isStep1, boolean needMerge, String callerIp) {
 
         DeployTaskResponse response = new DeployTaskResponse();
 
@@ -37,7 +37,7 @@ public class DeployService {
         if (needMerge) {
             // phase1. merge
             try {
-                MergeTaskResponse mergeTaskResponse = mergeService.mergeTwoBranches(AMConfig.getGitlab().getSourceBranch(), refTarget);
+                MergeTaskResponse mergeTaskResponse = mergeService.mergeTwoBranches(AMConfig.getGitlab().getSourceBranch(), refTarget, callerIp);
                 if (!mergeTaskResponse.isStatus()) {
                     response.setMsg(mergeTaskResponse.getMessage());
                     return response;
