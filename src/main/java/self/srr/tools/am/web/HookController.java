@@ -34,7 +34,7 @@ public class HookController {
                 String msg = "";
                 String pId = request.getObject_attributes().getId();
                 msg += ("Pipeline [#" + pId + "](" + AMConfig.getGitlab().getPublicProjectPage() + "/pipelines/" + pId + ") 发生构建错误。\n");
-                msg += ("状况位于 Build #" + b.getId() + "，构建名：" + b.getName() + "，阶段：" + b.getStage() + "，开始于：" + b.getStarted_at() + "，状态：" + b.getStatus());
+                msg += ("状况位于分支：" + request.getObject_attributes().getRef() + "，Build #" + b.getId() + "，构建名：" + b.getName() + "，阶段：" + b.getStage() + "，开始于：" + b.getStarted_at() + "，状态：" + b.getStatus());
                 mattermostApiService.sendPost(msg);
 
                 break;
