@@ -8,7 +8,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import self.srr.tools.am.common.AMConfig;
 import self.srr.tools.am.request.MattermostPostAPIRequest;
@@ -50,8 +49,7 @@ public class MattermostApiService {
             log.info("sendPost API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("Error happened in 'sendPost': " + e.getMessage());
+            log.error("Error happened in 'sendPost': " + e);
         }
 
         return apiResponse;

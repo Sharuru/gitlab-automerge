@@ -31,7 +31,7 @@ public class MergeService {
      * @return merge result
      * @throws Exception exception
      */
-    public MergeTaskResponse mergeTwoBranches(String refSource, String refTarget, String callerIp) throws Exception {
+    public MergeTaskResponse mergeTwoBranches(String refSource, String refTarget, String callerIp) throws InterruptedException {
 
         MergeTaskResponse response = new MergeTaskResponse();
 
