@@ -33,8 +33,8 @@ public class HookController {
                 log.info("Hook detected error status, pipeline #" + request.getObject_attributes().getId());
                 String msg = "";
                 String pId = request.getObject_attributes().getId();
-                msg += ("Pipeline [!#" + pId + "](" + AMConfig.getGitlab().getPublicProjectPage() + "/pipelines/" + pId + ") 发生构建错误。\n");
-                msg += ("状况位于 Build #" + b.getId() + "，构建名：" + b.getName() + "，阶段：" + b.getStage() + "，开始于：" + b.getStarted_at() + "，状态：" + b.getStatus().toUpperCase());
+                msg += ("Pipeline [#" + pId + "](" + AMConfig.getGitlab().getPublicProjectPage() + "/pipelines/" + pId + ") 发生构建错误。\n");
+                msg += ("状况位于 Build #" + b.getId() + "，构建名：" + b.getName() + "，阶段：" + b.getStage() + "，开始于：" + b.getStarted_at() + "，状态：" + b.getStatus());
                 mattermostApiService.sendPost(msg);
 
                 break;
