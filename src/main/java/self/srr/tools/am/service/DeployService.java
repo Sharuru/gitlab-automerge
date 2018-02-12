@@ -5,8 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import self.srr.tools.am.common.AMConfig;
 import self.srr.tools.am.model.response.DeployTaskResponse;
+import self.srr.tools.am.model.response.GitlabPipelineJobsResponse;
 import self.srr.tools.am.model.response.GitlabPipelineResponse;
 import self.srr.tools.am.model.response.MergeTaskResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -69,6 +73,29 @@ public class DeployService {
         }
 
         return response;
+
+    }
+
+    public List<String> triggerManual(String pipeId) {
+        GitlabPipelineJobsResponse jobs = gitlabApiService.listPipeJobs(pipeId);
+
+        List<String> respLst = new ArrayList<>();
+
+        if (!jobs.getJobLst().isEmpty()) {
+            jobs.getJobLst().forEach(j -> {
+                if ("manual".equalsIgnoreCase(j.getStatus())) {
+                    if (gitlabApiService.playManualJobs(j.getId())) {
+                        respLst.add("Job #" + j.getId() + " triggered successfully.");
+                    } else {
+                        respLst.add("Job #" + j.getId() + " triggered failed.");
+                    }
+                }
+            });
+        } else {
+            respLst.add("No manual job found in pipeline #" + pipeId);
+        }
+
+        return respLst;
 
     }
 

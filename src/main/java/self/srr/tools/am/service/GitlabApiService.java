@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import self.srr.tools.am.common.AMConfig;
-import self.srr.tools.am.model.response.GitlabMRListResponse;
-import self.srr.tools.am.model.response.GitlabMRResponse;
-import self.srr.tools.am.model.response.GitlabPipelineResponse;
+import self.srr.tools.am.model.response.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,7 +103,6 @@ public class GitlabApiService {
 
     }
 
-
     /**
      * Accept matched MR
      *
@@ -157,4 +154,55 @@ public class GitlabApiService {
 
         return listResponse;
     }
+
+    /**
+     * List all jobs in a pipeline
+     *
+     * @param pipeId pipeline id
+     * @return response
+     */
+    public GitlabPipelineJobsResponse listPipeJobs(String pipeId) {
+
+        GitlabPipelineJobsResponse jobsResponse = new GitlabPipelineJobsResponse();
+
+        HttpGet httpGet = new HttpGet(amConfig.getGitlab().getUrl() + API_NODE + amConfig.getGitlab().getProjectId() + "/pipelines/" + pipeId + "/jobs");
+        httpGet.setHeader(H_PARA_PRI_TOKN, amConfig.getGitlab().getPrivateToken());
+
+        try {
+            HttpResponse response = HttpClients.createDefault().execute(httpGet);
+            String responseStr = EntityUtils.toString(response.getEntity());
+            log.info("listPipeJobs API triggered with code " + response.getStatusLine().getStatusCode() + ": " + responseStr);
+            GitlabJobResponse[] jobs = new Gson().fromJson(responseStr, GitlabJobResponse[].class);
+            jobsResponse.setBizStatus(true);
+            jobsResponse.setJobLst(Arrays.asList(jobs));
+
+        } catch (Exception e) {
+            log.error("Error happened in 'listPipeJobs': " + e);
+        }
+
+        return jobsResponse;
+    }
+
+    public boolean playManualJobs(String jobId) {
+
+        HttpPost httpPost = new HttpPost(amConfig.getGitlab().getUrl() + API_NODE + amConfig.getGitlab().getProjectId() + "/jobs/" + jobId + "/play");
+        httpPost.setHeader(H_PARA_PRI_TOKN, amConfig.getGitlab().getPrivateToken());
+
+        int retCode = -1;
+
+        try {
+            HttpResponse response = HttpClients.createDefault().execute(httpPost);
+
+            String responseStr = EntityUtils.toString(response.getEntity());
+            retCode = response.getStatusLine().getStatusCode();
+            log.info("playManualJobs triggered with code " + retCode + ": " + responseStr);
+        } catch (Exception e) {
+            log.error("Error happened in 'playManualJobs': " + e);
+
+        }
+        return retCode == 200;
+
+    }
+
+
 }
