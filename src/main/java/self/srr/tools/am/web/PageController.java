@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import self.srr.tools.am.common.AMConfig;
-import self.srr.tools.am.response.DeployTaskResponse;
+import self.srr.tools.am.model.response.DeployTaskResponse;
 import self.srr.tools.am.service.DeployService;
 
 import javax.servlet.http.HttpServletRequest;

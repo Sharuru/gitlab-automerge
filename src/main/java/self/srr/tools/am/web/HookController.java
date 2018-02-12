@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import self.srr.tools.am.common.AMConfig;
-import self.srr.tools.am.request.GitlabBuildsRequest;
-import self.srr.tools.am.request.GitlabHookRequest;
+import self.srr.tools.am.model.request.GitlabBuildsRequest;
+import self.srr.tools.am.model.request.GitlabHookRequest;
 import self.srr.tools.am.service.MattermostApiService;
 
 @Slf4j

@@ -1,4 +1,4 @@
-package self.srr.tools.am.request;
+package self.srr.tools.am.model.request;
 
 import lombok.Data;
 

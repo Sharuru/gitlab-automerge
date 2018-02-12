@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import self.srr.tools.am.common.AMConfig;
-import self.srr.tools.am.response.DeployTaskResponse;
-import self.srr.tools.am.response.GitlabPipelineResponse;
-import self.srr.tools.am.response.MergeTaskResponse;
+import self.srr.tools.am.model.response.DeployTaskResponse;
+import self.srr.tools.am.model.response.GitlabPipelineResponse;
+import self.srr.tools.am.model.response.MergeTaskResponse;
 
 @Slf4j
 @Service

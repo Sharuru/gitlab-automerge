@@ -15,9 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import self.srr.tools.am.common.AMConfig;
-import self.srr.tools.am.response.GitlabMRListResponse;
-import self.srr.tools.am.response.GitlabMRResponse;
-import self.srr.tools.am.response.GitlabPipelineResponse;
+import self.srr.tools.am.model.response.GitlabMRListResponse;
+import self.srr.tools.am.model.response.GitlabMRResponse;
+import self.srr.tools.am.model.response.GitlabPipelineResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;

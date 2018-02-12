@@ -10,8 +10,8 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import self.srr.tools.am.common.AMConfig;
-import self.srr.tools.am.request.MattermostPostAPIRequest;
-import self.srr.tools.am.response.MattermostAPIResponse;
+import self.srr.tools.am.model.request.MattermostPostAPIRequest;
+import self.srr.tools.am.model.response.MattermostAPIResponse;
 
 @Slf4j
 @Service

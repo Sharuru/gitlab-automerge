@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import self.srr.tools.am.common.AMConfig;
-import self.srr.tools.am.response.GitlabMRListResponse;
-import self.srr.tools.am.response.GitlabMRResponse;
-import self.srr.tools.am.response.MergeTaskResponse;
+import self.srr.tools.am.model.response.GitlabMRListResponse;
+import self.srr.tools.am.model.response.GitlabMRResponse;
+import self.srr.tools.am.model.response.MergeTaskResponse;
 
 import java.util.concurrent.TimeUnit;
 
