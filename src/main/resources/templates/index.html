@@ -11,11 +11,20 @@
     <script th:src="@{/static/plugin/sweetalert/sweetalert.min.js}"></script>
 </head>
 <body>
-
+<style>
+    .unselectable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+</style>
 <!-- content -->
 <div class="container" style="margin-left: 10rem; margin-top: 2rem; margin-bottom: 10rem;">
     <div class="page-header">
-        <h1>GAM - 维护面板&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge">V0.6.0</span></h1>
+        <h1>GAM - 维护面板&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge unselectable" id="secret-btn">V0.6.1</span></h1>
         <p>在这里，你可以针对 STEP 1 以及 STEP 2 的机能进行手动发布管理。</p>
     </div>
 
@@ -84,6 +93,8 @@
 
 <script>
 
+    var clickCount = 0;
+
     function triggerManual(pipeId){
         $.ajax({
             type: 'POST',
@@ -94,9 +105,15 @@
             });
     }
 
-
-
     $(function () {
+
+        $("#secret-btn").click(function () {
+           clickCount += 1;
+           if(clickCount >= 3){
+               $("#d1-btn").removeAttr("disabled");
+           }
+        });
+
         $("#d1-btn").click(function () {
             var url = "/deployStep1";
             if ($("#secretUrl").val() === 'secret') {

@@ -75,6 +75,12 @@ public class GitlabApiService {
         return mergeRequestResponse;
     }
 
+    /**
+     * Trigger the pipeline job
+     *
+     * @param ref branch name
+     * @return response
+     */
     public GitlabPipelineResponse triggerPipe(String ref) {
 
         GitlabPipelineResponse gitlabPipelineResponse = new GitlabPipelineResponse();
@@ -183,6 +189,12 @@ public class GitlabApiService {
         return jobsResponse;
     }
 
+    /**
+     * Play the manual job
+     *
+     * @param jobId job id
+     * @return play result
+     */
     public boolean playManualJobs(String jobId) {
 
         HttpPost httpPost = new HttpPost(amConfig.getGitlab().getUrl() + API_NODE + amConfig.getGitlab().getProjectId() + "/jobs/" + jobId + "/play");
@@ -203,6 +215,5 @@ public class GitlabApiService {
         return retCode == 200;
 
     }
-
 
 }
