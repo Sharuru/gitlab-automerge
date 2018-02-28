@@ -30,184 +30,19 @@
 
     <div class="alert alert-info" role="alert">
         <div>
-            <b>2018-02-08：关于近期设定变更的关事宜</b>
+            <b>2018-02-28：关于使用前方部署系统的相关事宜</b>
             <p>
-                STEP 1 范围内的程序即日起调整为每日发布两次，分别为中国时间上午十一点以及下午四点。<br/>
-                另，全程序连接的数据库版本为：v0-10-0，请悉知。<br/>
+                因项目管理需要，即日起本面板已停止使用，请移步前方系统进行部署操作：<br/>
+                前方系统地址：<a href="http://172.19.6.119/jenkins/job/jast-dev-aws/job/LJ/job/SHANGHAI/">Jenkins Japan</a> <br/>
+                有关使用方法请查阅 WIKI：<a href="http://172.17.229.212:7083/projects/coding/wiki/%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95%EF%BC%88%E5%A4%96%E9%83%A8%EF%BC%89/">部署方法（外部）</a> <br/>
             </p>
         </div>
     </div>
 
-    <div class="alert alert-danger" role="alert">
-        <div>
-            <b>2018-01-29：关于 STEP 1 发布相关事宜</b>
-            <p>
-                STEP 1 范围内的程序为日方强化测试所用，若发布时代码存在编译错误则会导致<b>发布失败</b>，<b>系统不可用</b>，<b>前方夺命连环 CALL</b>等不良副作用，请悉知。<br/>
-                故此，计划外发布 STEP 1 的功能即日起<b>暂时关闭</b>。<br/>
-            </p>
-        </div>
-    </div>
 
-    <div class="alert alert-info" role="alert">
-        <div>
-            <b>2017-12-28：关于发布周期与其他事宜</b>
-            <p>
-                STEP 1 范围内的程序<b>通常</b>会在中国时间每天下午四点进行一次全量发布。<br/>
-                STEP 1 使用的数据库为前方提供的 LJD，SCHEMA 为：jastdb_v0-9-0-sh1。<br/>
-                STEP 2 范围内的程序请测试人员根据 Redmine Wiki 中的 ITA 发布流程进行操作。<br/>
-                STEP 2 使用的数据库为前方提供的 LJD，SCHEMA 为：jastdb_v0-9-0-sh2。<br/>
-            </p>
-        </div>
-    </div>
-
-    <div class="input-group">
-        <span class="input-group-addon">神秘代码</span>
-        <input type="text" class="form-control" placeholder="不知道请留空" id="secretUrl"/>
-    </div>
-
-
-    <div class="page-header">
-        <h3>STEP 1 操作区</h3>
-        <p>你可以在这里针对 STEP 1 范围内的某一单独程序进行计划外的发布。</p>
-    </div>
-
-    <div>
-        <p>单击“STEP 1 通知发布”按钮后，触发计划外发布流程，随后操作类似 ITA 阶段。</p>
-        <p>按下按钮后，请根据系统返回的 PIPELINE ID 前往对应页面等待基础部件编译完毕后，按下“播放键”进行单独程序的发布。</p>
-        <button type="button" id="d1-btn" disabled="disabled" class="btn btn-primary">STEP 1 通知发布 _(:3 」∠ )_</button>
-    </div>
-
-    <div class="page-header">
-        <h3>STEP 2 操作区</h3>
-        <p>你可以在这里通知系统立即合并开发分支中的代码进入 ITA 分支中，并准备进行发布。</p>
-    </div>
-
-    <div>
-        <p>单击“STEP 2 通知发布”按钮后，触发自主发布流程，随后操作类似 ITA 阶段。</p>
-        <p>按下按钮后，请根据系统返回的 PIPELINE ID 前往对应页面等待基础部件编译完毕后，按下“播放键”进行单独程序的发布。</p>
-        <button type="button" id="d2-btn" class="btn btn-primary">STEP 2 通知发布 ｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡</button>
-    </div>
 
 </div>
 
-
-<script>
-
-    var clickCount = 0;
-
-    function triggerManual(pipeId){
-        $.ajax({
-            type: 'POST',
-            url: '/triggerManual/' + pipeId
-        })
-            .done(function (data) {
-                console.log('Get response: ' + JSON.stringify(data));
-            });
-    }
-
-    $(function () {
-
-        $("#secret-btn").click(function () {
-           clickCount += 1;
-           if(clickCount >= 3){
-               $("#d1-btn").removeAttr("disabled");
-           }
-        });
-
-        $("#d1-btn").click(function () {
-            var url = "/deployStep1";
-            if ($("#secretUrl").val() === 'secret') {
-                url = url.concat("s");
-            }
-            swal({
-                    title: "STEP 1",
-                    text: "将要执行的操作：STEP 1 通知发布 <br/>" + '<p style="color:red"><b>请确保当前开发分支没有编译错误！</b></p>',
-                    type: "warning",
-                    html: true,
-                    showCancelButton: true,
-                    cancelButtonText: "取消",
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "确认",
-                    closeOnConfirm: false,
-                    closeOnCancel: false,
-                    showLoaderOnConfirm: true
-                },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            type: 'POST',
-                            url: url
-                        })
-                            .done(function (data) {
-                                if (data.bizStatus === true) {
-                                    swal({
-                                        title: "成功",
-                                        text: "STEP 1 通知发布成功 <br/>" + "下一步：" + data.msg,
-                                        type: "success",
-                                        html: true
-                                    });
-                                } else {
-                                    swal({
-                                        title: "失败",
-                                        text: "STEP 1 通知发布失败 <br/>" + data.msg,
-                                        type: "error",
-                                        html: true
-                                    });
-                                }
-                            });
-                    } else {
-                        swal("取消", "STEP 1 通知发布已取消。", "error");
-                    }
-                });
-        });
-
-        $("#d2-btn").click(function () {
-            var url = "/deployStep2";
-            if ($("#secretUrl").val() === 'secret') {
-                url = url.concat("s");
-            }
-            swal({
-                    title: "STEP 2",
-                    text: "将要执行的操作：STEP 2 通知发布",
-                    type: "warning",
-                    showCancelButton: true,
-                    cancelButtonText: "取消",
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "确认",
-                    closeOnConfirm: false,
-                    closeOnCancel: false,
-                    showLoaderOnConfirm: true
-                },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            type: 'POST',
-                            url: url
-                        })
-                            .done(function (data) {
-                                if (data.bizStatus === true) {
-                                    swal({
-                                        title: "成功",
-                                        text: "STEP 2 通知发布成功 <br/>" + "下一步：" + data.msg,
-                                        type: "success",
-                                        html: true
-                                    });
-                                } else {
-                                    swal({
-                                        title: "失败",
-                                        text: "STEP 2 通知发布失败 <br/>" + data.msg,
-                                        type: "error",
-                                        html: true
-                                    });
-                                }
-                            });
-                    } else {
-                        swal("取消", "STEP 2 通知发布已取消。", "error");
-                    }
-                });
-        })
-    });
-</script>
 
 </body>
 </html>
